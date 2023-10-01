@@ -1,0 +1,39 @@
+@use 'src/design/variables';
+
+.task-card {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  flex-direction: row;
+  padding: 16px;
+  border-radius: variables.$border-radius-m;
+  background: variables.$color-background-alt;
+  box-shadow: variables.$box-shadow;
+  color: variables.$color-text;
+  &:hover {
+    background: variables.$color-background-hover;
+    box-shadow: variables.$box-shadow-big;
+
+    .task-card__buttons {
+      display: flex;
+    }
+  }
+  
+  &__name {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  &__buttons {
+    display: none;
+    align-items: center;
+    padding: 0 16px 0 8px;
+    margin-left: auto;
+  }
+}

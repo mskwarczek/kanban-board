@@ -1,0 +1,65 @@
+@use 'src/design/variables';
+
+.add-new-button {
+  height: 32px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px 8px 10px;
+  border-radius: variables.$border-radius-s;
+
+  & span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: variables.$color-text-alt;
+  }
+
+  &.new-workspace {
+    background:
+      linear-gradient(0deg, #FFFFFF, #FFFFFF),
+      linear-gradient(0deg, rgba(231, 230, 236, 0.5), rgba(231, 230, 236, 0.5));
+    border: 1px solid rgba(231, 230, 236, 0.50);
+    filter:
+      drop-shadow(0px 0px 0px rgba(18, 3, 62, 0.10))
+      drop-shadow(0px 0px 1px rgba(18, 3, 62, 0.10))
+      drop-shadow(0px 1px 1px rgba(18, 3, 62, 0.09))
+      drop-shadow(0px 3px 2px rgba(18, 3, 62, 0.05))
+      drop-shadow(0px 5px 2px rgba(18, 3, 62, 0.01))
+      drop-shadow(0px 8px 2px rgb(18, 3, 62, 0.001));
+    
+    & span {
+      color: variables.$color-text;
+    }
+
+    &.new-workspace--adding {
+      cursor: not-allowed;
+      background:
+        linear-gradient(0deg, #D0CDD8, #D0CDD8),
+        linear-gradient(0deg, #B8B3C5, #B8B3C5);
+      border: 1px solid #B8B3C5;
+      filter: none;
+
+      & span {
+        color: #594F78;
+      }
+    }
+
+    &.new-workspace--ready {
+      background: variables.$color-background-action;
+      border: 1px solid variables.$color-background-action;
+
+      & span {
+        color: variables.$color-text-action-alt;
+      }
+    }
+  }
+}

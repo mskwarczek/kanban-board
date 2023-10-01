@@ -1,7 +1,10 @@
+@use 'src/design/variables';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 * {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 :root {
@@ -16,6 +19,22 @@
 }
 
 body {
-  margin: 0;
-  background: #F4F7FE;
+  background: variables.$color-background;
+}
+
+button {
+  font-family: 'Inter', sans-serif;
+  color: inherit;
+  background-color: inherit;
+  outline: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  font-family: 'Inter', sans-serif;
+  background-color: inherit;
+  outline: inherit;
+  outline: inherit;
+  border: none;
 }

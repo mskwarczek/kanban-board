@@ -1,0 +1,26 @@
+@use 'src/design/variables';
+
+.workspace-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  min-width: 32px;
+  margin-right: 12px;
+  background: #B3C4D6;
+  border-radius: variables.$border-radius-m;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: variables.$color-text;
+  opacity: 0.5;
+
+  &.workspace-active,
+  &.new-workspace,
+  &.edit-workspace {
+    opacity: 1;
+  }
+}

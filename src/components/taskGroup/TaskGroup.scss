@@ -1,0 +1,47 @@
+@use 'src/design/variables';
+
+.task-group {
+  width: 100%;
+  max-width: variables.$card-max-width;
+  padding: 16px 8px 8px 8px;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: variables.$border-radius-l;
+  background: variables.$color-background-dark;
+  box-shadow: variables.$box-shadow-big;
+
+  &__name {
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: variables.$color-text;
+    overflow-wrap: anywhere;
+    padding-bottom: 8px;
+
+    &:hover {
+      .task-group__buttons {
+        display: flex;
+      }
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__buttons {
+    display: none;
+    align-items: center;
+    padding: 0 16px 0 8px;
+    margin-left: auto;
+  }
+}

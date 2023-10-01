@@ -1,0 +1,7 @@
+@use 'src/design/variables';
+
+.add-task {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}

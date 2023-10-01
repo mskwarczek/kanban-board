@@ -1,0 +1,13 @@
+.task-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}

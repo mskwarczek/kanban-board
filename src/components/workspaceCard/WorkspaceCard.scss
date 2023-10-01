@@ -1,0 +1,53 @@
+@use 'src/design/variables';
+
+.workspace-card {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  border-radius: variables.$border-radius-m;
+  background: variables.$color-background-alt;
+  color: variables.$color-text;
+
+  &:hover {
+    background: variables.$color-background;
+
+    .workspace-card__buttons {
+      display: flex;
+    }
+
+    .workspace-icon,
+    .workspace-card__name {
+      opacity: 1;
+    }
+  }
+
+  &--active {
+    background: variables.$color-background;
+  }
+  
+  &__name {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    overflow-wrap: anywhere;
+    opacity: 0.5;
+
+    &--active {
+      opacity: 1;
+    }
+  }
+
+  &__buttons {
+    display: none;
+    align-items: center;
+    padding: 0 16px 0 8px;
+    margin-left: auto;
+  }
+}
