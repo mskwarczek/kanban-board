@@ -1,4 +1,8 @@
 import { useSelector } from 'react-redux';
+import {  
+  SortableContext,
+  horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 import './Workspace.scss';
 import { TaskGroup } from '../taskGroup';
@@ -14,15 +18,21 @@ export const Workspace = ({ id }: WorkspaceProps) => {
 
   return (
     <div className='workspace'>
-      {groups?.length
-        ? groups.map(group => (
-          <TaskGroup
-            key={group.id}
-            group={group}
-          />
-        ))
-        : null}
+      <SortableContext 
+        id={'sortable-context-groups'}
+        items={groups.map((i) => i?.id)}
+        strategy={horizontalListSortingStrategy}
+      >
+        {groups?.length
+          ? groups.map(group => (
+            <TaskGroup
+              key={group.id}
+              group={group}
+            />
+          ))
+          : null}
+        </SortableContext>
       <NewTaskGroup id={id} />
     </div>
-  )
+  );
 }

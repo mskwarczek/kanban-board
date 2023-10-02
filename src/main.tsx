@@ -10,9 +10,7 @@ import { store } from './store/store.ts';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <DndContext>
         <App />
-      </DndContext>
     </Provider>
   </React.StrictMode>,
 );

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { arrayMove } from '@dnd-kit/sortable';
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createId } from '../../utils/createId';
@@ -23,30 +24,66 @@ const testState: BoardInterface | Record<string, never> = {
     id: 'workspace-1',
     name: 'Test workspace 1',
     position: Infinity,
+  }, {
+    id: 'workspace-2',
+    name: 'Test workspace 2',
+    position: Infinity,
+  }, {
+    id: 'workspace-3',
+    name: 'Test workspace 3',
+    position: Infinity,
+  }, {
+    id: 'workspace-4',
+    name: 'Test workspace 4',
+    position: Infinity,
   }],
   groups: [{
     id: 'group-00',
     name: 'Test group normal length',
     position: Infinity,
     owner: 'workspace-1',
+  }, {
+    id: 'group-01',
+    name: 'Test group 1',
+    position: Infinity,
+    owner: 'workspace-1',
   }],
   tasks: [{
-      id: 'task-000',
-      name: 'Test task normal length',
-      owner: 'group-00',
-      completed: false,
-    }, {
-      id: 'task-001',
-      name: 'This is a task with very long name using typical english words intended to to see if it is displayed correctly',
-      owner: 'group-00',
-      completed: false,
-    }, {
-      id: 'task-002',
-      name: 'Thhheeeeesssseeeee aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeeeeeeeeeeee lllllllllllllllllllllllllloooooooooooooooonnnnnnnngggggggg wwwwwwwwwwwwwwwwwwooooooooooorrrrrrrdddddddddsssssssss',
-      owner: 'group-00',
-      completed: false,
-    },
-  ],
+    id: 'task-000',
+    name: 'Test task normal length',
+    owner: 'group-00',
+    completed: false,
+  }, {
+    id: 'task-001',
+    name: 'This is a task with very long name using typical english words intended to to see if it is displayed correctly',
+    owner: 'group-00',
+    completed: false,
+  }, {
+    id: 'task-002',
+    name: 'Thhheeeeesssseeeee aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeeeeeeeeeeee lllllllllllllllllllllllllloooooooooooooooonnnnnnnngggggggg wwwwwwwwwwwwwwwwwwooooooooooorrrrrrrdddddddddsssssssss',
+    owner: 'group-00',
+    completed: false,
+  }, {
+    id: createId('task'),
+    name: 'Test task 1',
+    owner: 'group-01',
+    completed: false,
+  }, {
+    id: createId('task'),
+    name: 'Test task 2',
+    owner: 'group-01',
+    completed: false,
+  }, {
+    id: createId('task'),
+    name: 'Test task 3',
+    owner: 'group-01',
+    completed: false,
+  }, {
+    id: createId('task'),
+    name: 'Test task 4',
+    owner: 'group-01',
+    completed: false,
+  }],
   isEdited: false,
   isCreatingNewWorkspace: false,
   selectedWorkspace: undefined,
@@ -74,6 +111,46 @@ export const boardSlice = createSlice({
     }>) {
       const workspaceIndex = state.workspaces.findIndex(workspace => workspace.id === action.payload.id);
       if (workspaceIndex !== -1) state.workspaces[workspaceIndex].name = action.payload.name;
+    },
+    editWorkspacePosition(state, action: PayloadAction<{
+      activeId: string;
+      overId: string;
+    }>) {
+      const oldIndex = state.workspaces.findIndex(workspace => workspace.id === action.payload.activeId);
+      const newIndex = state.workspaces.findIndex(workspace => workspace.id === action.payload.overId);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newSorting = arrayMove(state.workspaces, oldIndex, newIndex);
+        state.workspaces = newSorting;
+      }
+    },
+    editGroupPosition(state, action: PayloadAction<{
+      activeId: string;
+      overId: string;
+    }>) {
+      const oldIndex = state.groups.findIndex(group => group.id === action.payload.activeId);
+      const newIndex = state.groups.findIndex(group => group.id === action.payload.overId);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newSorting = arrayMove(state.groups, oldIndex, newIndex);
+        state.groups = newSorting;
+      }
+    },
+    editTaskPosition(state, action: PayloadAction<{
+      activeId: string;
+      overId: string;
+    }>) {
+      const oldIndex = state.tasks.findIndex(task => task.id === action.payload.activeId);
+      const newIndex = state.tasks.findIndex(task => task.id === action.payload.overId);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newSorting = arrayMove(state.tasks, oldIndex, newIndex);
+        state.tasks = newSorting;
+      }
+    },
+    moveTaskToDifferentGroup(state, action: PayloadAction<{
+      activeId: string;
+      overGroup: string;
+    }>) {
+      const oldIndex = state.tasks.findIndex(task => task.id === action.payload.activeId);
+      if (oldIndex !== -1) state.tasks[oldIndex].owner = action.payload.overGroup;
     },
     deleteWorkspace(state, action: PayloadAction<string>) {
       state.workspaces = state.workspaces.filter(workspace => workspace.id !== action.payload);
@@ -149,4 +226,8 @@ export const {
   setEditing,
   setCreatingNewWorkspace,
   selectWorkspace,
+  editWorkspacePosition,
+  editGroupPosition,
+  editTaskPosition,
+  moveTaskToDifferentGroup,
 } = boardSlice.actions;

@@ -1,5 +1,11 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  useSortable,
+  SortableContext,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import './TaskGroup.scss';
 import { deleteGroup, editGroupName } from '../../store/slices';
@@ -7,6 +13,7 @@ import { CardEdit } from '../cardEdit';
 import { TaskCard } from '../taskCard';
 import { NewTask } from '../newTask';
 import { CardButtons } from '../cardButtons';
+import { DraggableItem } from '../draggableItem';
 import type { RootState } from '../../store/store';
 import type { TaskGroupInterface } from '../../store/types';
 
@@ -20,6 +27,27 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
   const dispatch = useDispatch();
   const tasks = useSelector((state: RootState) => state.board.tasks).filter(task => task.owner === group.id);
   const isBoardEdited = useSelector((state: RootState) => state.board.isEdited);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: group.id,
+    data: {
+      type: 'group',
+      owner: group.owner,
+    },
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   const handleGroupNameChange = (value: string) => {
     setGroupName(value);
@@ -50,7 +78,14 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
   }
 
   return (
-    <div className='task-group'>
+    <DraggableItem
+      ref={setNodeRef}
+      id={group.id}
+      className='task-group'
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       {isEditing ? (
         <CardEdit
           value={groupName}
@@ -69,6 +104,11 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
         </div>
       )}
       <div className='task-group__list'>
+        <SortableContext 
+          id={`sortable-context-tasks--${group.id}`}
+          items={tasks.map((i) => i?.id)}
+          strategy={rectSortingStrategy}
+        >
         {tasks?.length
           ? tasks.map(task => (
             <TaskCard
@@ -77,8 +117,9 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
             />
           ))
           : null}
+        </SortableContext>
         <NewTask id={group.id} />
       </div>
-    </div>
-  )
+    </DraggableItem>
+  );
 }

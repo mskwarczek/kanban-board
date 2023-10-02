@@ -1,3 +1,8 @@
+import {  
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
 import './WorkspacesSidebar.scss';
 import { UserProfile } from '../userProfile';
 import { WorkspaceSettings } from '../workspaceSettings';
@@ -19,15 +24,21 @@ export const WorkspacesSidebar = ({
   return (
     <div className='workspaces'>
       <div className='workspaces-header'>
-        {workspaces?.length
-          ? workspaces.map(workspace => (
-            <WorkspaceCard
-              key={workspace.id}
-              workspace={workspace}
-              isActive={!isCreatingNewWorkspace && (workspace.id === selectedWorkspace)}
-            />
-          ))
-          : null}
+        <SortableContext 
+          id={'sortable-context-workspaces'}
+          items={workspaces.map((i) => i?.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {workspaces?.length
+            ? workspaces.map(workspace => (
+              <WorkspaceCard
+                key={workspace.id}
+                workspace={workspace}
+                isActive={!isCreatingNewWorkspace && (workspace.id === selectedWorkspace)}
+              />
+            ))
+            : null}
+        </SortableContext>
         <NewWorkspace />
       </div>
       <div className='workspaces-main'></div>
@@ -36,5 +47,5 @@ export const WorkspacesSidebar = ({
         <WorkspaceSettings/>
       </div>
     </div>
-  )
+  );
 }
