@@ -32,7 +32,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
   } = useDraggable({
     id: task.id,
     data: {
-      type: 'task',
+      type: task.subtaskOf ? 'subtask' : 'task',
       owner: task.owner,
       name: task.name,
     },

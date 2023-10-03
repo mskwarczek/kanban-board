@@ -24,7 +24,7 @@ export const NewTaskGroup = ({ id }: NewTaskGroupProps) => {
           value={recordName}
           placeholder='Title of the new list...'
           handleNameChange={handleRecordNameChange}
-          handleEditEnd={handleCreateRecord}
+          handleEditEnd={handleCancel}
           classExtension='new-group'
           handleEditCancel={handleCancel}
           withButtons={true}

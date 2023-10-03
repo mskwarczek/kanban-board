@@ -149,6 +149,41 @@ export const boardSlice = createSlice({
         state.tasks[oldIndex].owner = action.payload.overGroup;
       }
     },
+    moveGroupToDifferentWorkspace(state, action: PayloadAction<{
+      activeId: string;
+      overWorkspace: string;
+    }>) {
+      const oldIndex = state.groups.findIndex(group => group.id === action.payload.activeId);
+      if (oldIndex !== -1) {
+        state.groups[oldIndex].owner = action.payload.overWorkspace;
+      }
+    },
+    moveTaskToDifferentWorkspace(state, action: PayloadAction<{
+      activeId: string;
+      overWorkspace: string;
+    }>) {
+      const oldIndex = state.tasks.findIndex(task => task.id === action.payload.activeId);
+      if (oldIndex !== -1) {
+        const firstExistingGroup = state.groups.find(group => group.owner === action.payload.overWorkspace);
+        if (firstExistingGroup) {
+          state.tasks.forEach(task => {
+            if (task.subtaskOf === action.payload.activeId) task.owner = firstExistingGroup.id;
+          })
+          state.tasks[oldIndex].owner = firstExistingGroup.id;
+        } else {
+          const newGroupId = createId('group');
+          state.groups.push({
+            id: newGroupId,
+            name: 'New Group',
+            owner: action.payload.overWorkspace,
+          });
+          state.tasks.forEach(task => {
+            if (task.subtaskOf === action.payload.activeId) task.owner = newGroupId;
+          })
+          state.tasks[oldIndex].owner = newGroupId;
+        }
+      }
+    },
     createGroup(state, action: PayloadAction<{
       name: string;
       owner: string;
@@ -233,4 +268,6 @@ export const {
   editWorkspacePosition,
   editGroupPosition,
   moveTaskToDifferentGroup,
+  moveTaskToDifferentWorkspace,
+  moveGroupToDifferentWorkspace,
 } = boardSlice.actions;

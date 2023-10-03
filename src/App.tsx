@@ -21,7 +21,10 @@ import { DraggableItem } from './components/draggableItem';
 import {
   editGroupPosition,
   editWorkspacePosition,
+  selectWorkspace,
   moveTaskToDifferentGroup,
+  moveTaskToDifferentWorkspace,
+  moveGroupToDifferentWorkspace,
 } from './store/slices';
 import type { RootState } from './store/store';
 
@@ -82,6 +85,28 @@ export const App = () => {
         }
       }
     }
+
+    if ((activeType === 'task' || activeType === 'group') && overType === 'workspace') {
+      if (over?.id) {
+        dispatch(selectWorkspace(over.id.toString()));
+        if (activeType === 'task') {
+          dispatch(
+            moveTaskToDifferentWorkspace({
+              activeId: active.id.toString(),
+              overWorkspace: over.id.toString(),
+            })
+          );
+        }
+        if (activeType === 'group') {
+          dispatch(
+            moveGroupToDifferentWorkspace({
+              activeId: active.id.toString(),
+              overWorkspace: over.id.toString(),
+            })
+          );
+        }
+      }
+    }
   };
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -116,7 +141,11 @@ export const App = () => {
     ...args
   }) => {
     const activeType = args.active.data.current?.type;
+    if (activeType === 'subtasks') return [];
     if (activeType === 'task') {
+      const pointerCollisions = pointerWithin(args);
+      const workspacePointerCollisions = pointerCollisions.filter(elem => elem.data?.droppableContainer.data.current?.type === 'workspace');
+      if (workspacePointerCollisions.length > 0) return workspacePointerCollisions;
       const cornerCollisions = closestCorners(args);
       const groupCornerCollisions = cornerCollisions.filter(elem => elem.data?.droppableContainer.data.current?.type === 'group');
       if (groupCornerCollisions.length > 0) return groupCornerCollisions;
@@ -124,6 +153,8 @@ export const App = () => {
     if (activeType === 'group') {
       const pointerCollisions = pointerWithin(args);
       if (pointerCollisions.length > 0) {
+        const workspacePointerCollisions = pointerCollisions.filter(elem => elem.data?.droppableContainer.data.current?.type === 'workspace');
+        if (workspacePointerCollisions.length > 0) return workspacePointerCollisions;
         const groupPointerCollisions = pointerCollisions.filter(elem => elem.data?.droppableContainer.data.current?.type === 'group');
         if (groupPointerCollisions.length > 0) return groupPointerCollisions;
       }
