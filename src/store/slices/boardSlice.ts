@@ -134,17 +134,6 @@ export const boardSlice = createSlice({
         state.groups = newSorting;
       }
     },
-    editTaskPosition(state, action: PayloadAction<{
-      activeId: string;
-      overId: string;
-    }>) {
-      const oldIndex = state.tasks.findIndex(task => task.id === action.payload.activeId);
-      const newIndex = state.tasks.findIndex(task => task.id === action.payload.overId);
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newSorting = arrayMove(state.tasks, oldIndex, newIndex);
-        state.tasks = newSorting;
-      }
-    },
     moveTaskToDifferentGroup(state, action: PayloadAction<{
       activeId: string;
       overGroup: string;
@@ -228,6 +217,5 @@ export const {
   selectWorkspace,
   editWorkspacePosition,
   editGroupPosition,
-  editTaskPosition,
   moveTaskToDifferentGroup,
 } = boardSlice.actions;

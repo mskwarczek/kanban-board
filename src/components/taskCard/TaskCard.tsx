@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useDraggable } from '@dnd-kit/core';
 
 import './TaskCard.scss';
 import { deleteTask, editTaskName } from '../../store/slices';
@@ -25,22 +24,14 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     attributes,
     listeners,
     setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  } = useDraggable({
     id: task.id,
     data: {
       type: 'task',
       owner: task.owner,
+      name: task.name,
     },
-  }); 
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
+  });
 
   const handleTaskNameChange = (value: string) => {
     setTaskName(value);
@@ -80,23 +71,22 @@ export const TaskCard = ({ task }: TaskCardProps) => {
 
   return (
     <DraggableItem
-    ref={setNodeRef}
-    id={task.id}
-    style={style}
-    {...attributes}
-    {...listeners}
-  >
-    <div className='task-card'>
-      <div className='task-card__name'>
-        {task.name}
+      ref={setNodeRef}
+      id={task.id}
+      {...attributes}
+      {...listeners}
+    >
+      <div className={`task-card ${task.subtaskOf ? 'task-card--subtask' : ''}`}>
+        <div className='task-card__name'>
+          {task.name}
+        </div>
+        <div className='task-card__buttons'>
+          <CardButtons
+            handleEditCardButton={handleEditTaskButton}
+            handleDeleteCardButton={handleDeleteTask}
+          />
+        </div>
       </div>
-      <div className='task-card__buttons'>
-        <CardButtons
-          handleEditCardButton={handleEditTaskButton}
-          handleDeleteCardButton={handleDeleteTask}
-        />
-      </div>
-    </div>
     </DraggableItem>
   );
 }

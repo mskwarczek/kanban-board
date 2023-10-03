@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useDroppable } from '@dnd-kit/core';
 import {
   useSortable,
   SortableContext,
@@ -40,6 +41,16 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
     data: {
       type: 'group',
       owner: group.owner,
+      name: group.name,
+    },
+  });
+
+  const { setNodeRef: setDroppableNodeRef } = useDroppable({
+    id: group.id,
+    data: {
+      type: 'group',
+      owner: group.owner,
+      name: group.name,
     },
   });
 
@@ -78,48 +89,53 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
   }
 
   return (
-    <DraggableItem
-      ref={setNodeRef}
-      id={group.id}
-      className='task-group'
-      style={style}
-      {...attributes}
-      {...listeners}
+    <div
+      ref={setDroppableNodeRef}
+      className='task-group-container'
     >
-      {isEditing ? (
-        <CardEdit
-          value={groupName}
-          handleNameChange={handleGroupNameChange}
-          handleEditEnd={handleEditGroup}
-        />
-      ) : (
-        <div className='task-group__name'>
-          <h4>{group.name}</h4>
-          <div className='task-group__buttons'>
-            <CardButtons
-              handleEditCardButton={handleEditGroupButton}
-              handleDeleteCardButton={handleDeleteGroup}
-            />
+      <DraggableItem
+        ref={setNodeRef}
+        id={group.id}
+        className='task-group'
+        style={style}
+        {...attributes}
+        {...listeners}
+      >
+        {isEditing ? (
+          <CardEdit
+            value={groupName}
+            handleNameChange={handleGroupNameChange}
+            handleEditEnd={handleEditGroup}
+          />
+        ) : (
+          <div className='task-group__name'>
+            <h4>{group.name}</h4>
+            <div className='task-group__buttons'>
+              <CardButtons
+                handleEditCardButton={handleEditGroupButton}
+                handleDeleteCardButton={handleDeleteGroup}
+              />
+            </div>
           </div>
+        )}
+        <div className='task-group__list'>
+          <SortableContext 
+            id={`sortable-context-tasks--${group.id}`}
+            items={tasks.map((i) => i?.id)}
+            strategy={rectSortingStrategy}
+          >
+          {tasks?.length
+            ? tasks.map(task => (
+              <TaskCard
+                key={task.id}
+                task={task}
+              />
+            ))
+            : null}
+          </SortableContext>
+          <NewTask id={group.id} />
         </div>
-      )}
-      <div className='task-group__list'>
-        <SortableContext 
-          id={`sortable-context-tasks--${group.id}`}
-          items={tasks.map((i) => i?.id)}
-          strategy={rectSortingStrategy}
-        >
-        {tasks?.length
-          ? tasks.map(task => (
-            <TaskCard
-              key={task.id}
-              task={task}
-            />
-          ))
-          : null}
-        </SortableContext>
-        <NewTask id={group.id} />
-      </div>
-    </DraggableItem>
+      </DraggableItem>
+    </div>
   );
 }

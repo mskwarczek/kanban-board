@@ -37,7 +37,10 @@ export const WorkspaceCard = ({ workspace, isActive }: WorkspaceCardProps) => {
     isDragging,
   } = useSortable({
     id: workspace.id,
-    data: { type: 'workspace' },
+    data: {
+      type: 'workspace',
+      name: workspace.name,
+    },
   }); 
 
   const style = {

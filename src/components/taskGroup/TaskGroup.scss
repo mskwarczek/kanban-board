@@ -1,5 +1,10 @@
 @use 'src/design/variables';
 
+.task-group-container {
+  width: 100%;
+  max-width: variables.$card-max-width;
+}
+
 .task-group {
   width: 100%;
   max-width: variables.$card-max-width;

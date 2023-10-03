@@ -10,8 +10,8 @@ interface DraggableItemProps {
   }
 }
 
-export const DraggableItem = forwardRef<HTMLDivElement, DraggableItemProps>(({ children, className, style, ...props }, ref) => {
+export const DraggableItem = forwardRef<HTMLDivElement, DraggableItemProps>(({ id, children, className, style, ...props }, ref) => {
   return (
-    <div {...props} ref={ref} style={style} className={className}>{children}</div>
+    <div {...props} ref={ref} style={style} className={className} id={id}>{children}</div>
   );
 });

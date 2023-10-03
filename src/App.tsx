@@ -8,8 +8,8 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  rectIntersection,
   pointerWithin,
+  closestCorners,
   DragOverlay,
   CollisionDetection,
 } from '@dnd-kit/core';
@@ -18,11 +18,16 @@ import './App.scss';
 import { WorkspacesSidebar } from './components/workspacesSidebar';
 import { Workspace } from './components/workspace';
 import { DraggableItem } from './components/draggableItem';
-import { editTaskPosition, editGroupPosition, editWorkspacePosition, moveTaskToDifferentGroup } from './store/slices';
+import {
+  editGroupPosition,
+  editWorkspacePosition,
+  moveTaskToDifferentGroup,
+} from './store/slices';
 import type { RootState } from './store/store';
 
 export const App = () => {
-  const [activeId, setActiveId] = useState<string|number|null>(null);
+  const [dragId, setDragId] = useState<string|number|null>(null);
+  const [dragName, setDragName] = useState<string>('');
   const {
     workspaces,
     selectedWorkspace,
@@ -39,10 +44,15 @@ export const App = () => {
   );
 
   const handleDragStart = ({ active }: DragStartEvent) => {
-    setActiveId(active.id);
+    const activeDragName = active.data.current?.name;
+    setDragId(active.id);
+    if (activeDragName) setDragName(activeDragName);
   }
 
-  const handleDragCancel = () => setActiveId(null);
+  const handleDragCancel = () => {
+    setDragId(null);
+    setDragName('');
+  }
 
   const handleDragOver = ({ active, over }: DragOverEvent) => {
     const activeType = active.data.current?.type;
@@ -52,9 +62,9 @@ export const App = () => {
       const overId = over?.id;
       if (!overId) return;
 
-      const activeContainer = active.data.current?.sortable.containerId;
-      const overContainer = over.data.current?.sortable.containerId || over.id;
-      
+      const activeContainer = active.id;
+      const overContainer = over.data.current?.sortable?.containerId || over.id;
+
       if (activeContainer !== overContainer) {
         const overGroup = overType === 'group'
           ? over.id
@@ -97,29 +107,28 @@ export const App = () => {
             })
           );
         }
-      } else if (active.data.current?.type === 'task') {
-        dispatch(
-          editTaskPosition({
-            activeId: active.id.toString(),
-            overId: over.id.toString(),
-          })
-        );
-      }
+      } 
     }
-    setActiveId(null);
+    setDragId(null);
+    setDragName('');
   }
   const collisionDetectionAlgorithm: CollisionDetection = ({
     ...args
   }) => {
     const activeType = args.active.data.current?.type;
-    const pointerCollisions = pointerWithin(args);
-    if (pointerCollisions.length > 0) {
-      if (activeType === 'group') {
-        return pointerCollisions.filter(elem => elem.data?.droppableContainer.data.current?.type === 'group');
-      }
-      return pointerCollisions;
+    if (activeType === 'task') {
+      const cornerCollisions = closestCorners(args);
+      const groupCornerCollisions = cornerCollisions.filter(elem => elem.data?.droppableContainer.data.current?.type === 'group');
+      if (groupCornerCollisions.length > 0) return groupCornerCollisions;
     }
-    return rectIntersection(args);
+    if (activeType === 'group') {
+      const pointerCollisions = pointerWithin(args);
+      if (pointerCollisions.length > 0) {
+        const groupPointerCollisions = pointerCollisions.filter(elem => elem.data?.droppableContainer.data.current?.type === 'group');
+        if (groupPointerCollisions.length > 0) return groupPointerCollisions;
+      }
+    }
+    return closestCorners(args);
   }
 
   return (
@@ -140,7 +149,7 @@ export const App = () => {
         />
         {selectedWorkspace && <Workspace id={selectedWorkspace} />}
         <DragOverlay>
-          {activeId ? <DraggableItem id={activeId.toString()}/> : null}
+          {dragId ? <DraggableItem id={setDragId.toString()}><div className='draggable-item-overlay'>{dragName}</div></DraggableItem> : null}
         </DragOverlay>
       </div>
     </DndContext>
