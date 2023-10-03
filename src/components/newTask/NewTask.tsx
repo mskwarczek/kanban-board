@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import './NewTask.scss';
 import { CardEdit } from '../cardEdit';
 import { AddNewButton } from '../addNewButton';
@@ -6,17 +8,36 @@ import { useCardAdd } from '../../utils/useCardAdd';
 
 interface NewTaskProps {
   id: string;
+  subtaskOf?: string;
+  activeateOnInit?: boolean
 }
 
-export const NewTask = ({ id }: NewTaskProps) => {
+export const NewTask = ({
+  id,
+  subtaskOf,
+  activeateOnInit,
+}: NewTaskProps) => {
   const {
     isEditing,
     recordName,
+    isComplete,
+    setIsEditing,
     handleClickAddNew,
     handleRecordNameChange,
     handleCancel,
     handleCreateRecord,
-  } = useCardAdd({ type: 'tasks', id });
+    toggleComplete,
+  } = useCardAdd({
+    type: 'tasks',
+    id,
+    data: { subtaskOf }
+  });
+
+  useEffect(() => {
+    if (activeateOnInit && !isEditing) {
+      setIsEditing(true);
+    }
+  }, [activeateOnInit, isEditing, setIsEditing]);
 
   return (
     <div className='add-task'>
@@ -24,19 +45,22 @@ export const NewTask = ({ id }: NewTaskProps) => {
         <div>
           <CardEdit
             value={recordName}
-            placeholder='Title of the new card...'
+            placeholder={subtaskOf ? 'New subtask' : 'Title of the new card...'}
             handleNameChange={handleRecordNameChange}
             handleEditEnd={handleCancel}
             handleEditCancel={handleCancel}
             withButtons={true}
-            buttonText='Add card'
+            buttonText={subtaskOf ? 'Add subtask' :'Add card'}
             buttonAction={handleCreateRecord}
+            withCheckbox={true}
+            checkboxStatus={isComplete}
+            handleCheckboxClick={toggleComplete}
           />
         </div>
       )}
       <AddNewButton
         handleClickAddNew={handleClickAddNew}
-        text='Add a card'
+        text={subtaskOf ? 'Add a subtask' : 'Add a card'}
         icon={<Plus />}
       />
     </div>

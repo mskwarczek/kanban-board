@@ -1,0 +1,21 @@
+@use 'src/design/variables';
+
+.task-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  margin-right: 8px;
+  border-radius: 2px;
+  background:
+    linear-gradient(0deg, #FFFFFF, #FFFFFF),
+    linear-gradient(0deg, #D7D6DF, #D7D6DF);
+  border: 1px solid #D7D6DF;
+
+  &--checked {
+    background: variables.$color-background-action;
+    border: 1px solid variables.$color-background-action;
+  }
+}

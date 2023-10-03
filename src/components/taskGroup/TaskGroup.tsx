@@ -26,7 +26,8 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [groupName, setGroupName] = useState(group.name);
   const dispatch = useDispatch();
-  const tasks = useSelector((state: RootState) => state.board.tasks).filter(task => task.owner === group.id);
+  const tasksCounted = useSelector((state: RootState) => state.board.tasks).filter(task => task.owner === group.id);
+  const tasks = tasksCounted.filter(task => !task.subtaskOf);
   const isBoardEdited = useSelector((state: RootState) => state.board.isEdited);
 
   const {
@@ -123,6 +124,9 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
                 handleEditCardButton={handleEditGroupButton}
                 handleDeleteCardButton={handleDeleteGroup}
               />
+            </div>
+            <div className='tasks-completion-count'>
+              {tasksCounted.filter(task => task.completed).length}/{tasksCounted.length}
             </div>
           </div>
         )}

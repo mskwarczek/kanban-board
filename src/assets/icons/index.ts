@@ -1,3 +1,5 @@
+export * from './ArrowDown';
+export * from './ArrowRight';
 export * from './Check';
 export * from './Close';
 export * from './Edit';

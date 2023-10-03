@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import './CardEdit.scss';
 import { AddNewButton } from '../addNewButton';
+import { TaskCheckbox } from '../taskCheckbox';
 import { Close } from '../../assets/icons';
 import { setEditing } from '../../store/slices';
 import type { RootState } from '../../store/store';
@@ -15,6 +16,9 @@ interface CardEditProps {
   withButtons?: boolean;
   buttonText?: string;
   buttonAction?: () => void;
+  withCheckbox?: boolean;
+  checkboxStatus?: boolean;
+  handleCheckboxClick?: () => void;
   placeholder?: string;
   icon?: React.ReactNode;
   classExtension?: string;
@@ -28,6 +32,9 @@ export const CardEdit = ({
   withButtons,
   buttonText,
   buttonAction,
+  withCheckbox,
+  checkboxStatus,
+  handleCheckboxClick,
   placeholder,
   icon,
   classExtension = '',
@@ -68,6 +75,10 @@ export const CardEdit = ({
     <div className={`card-edit card-edit--with-buttons ${classExtension}`} ref={ref}>
       <div className='card-edit__input-wrapper'>
         {icon ? icon : false}
+        {withCheckbox ? <TaskCheckbox
+          checked={!!checkboxStatus}
+          handleClick={handleCheckboxClick ? handleCheckboxClick : () => null}
+        /> : false}
         <input
           className={`card-edit__input ${classExtension}`}
           value={value}

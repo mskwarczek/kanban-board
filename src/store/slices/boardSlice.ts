@@ -136,7 +136,12 @@ export const boardSlice = createSlice({
       overGroup: string;
     }>) {
       const oldIndex = state.tasks.findIndex(task => task.id === action.payload.activeId);
-      if (oldIndex !== -1) state.tasks[oldIndex].owner = action.payload.overGroup;
+      if (oldIndex !== -1) {
+        state.tasks.forEach(task => {
+          if (task.subtaskOf === action.payload.activeId) task.owner = action.payload.overGroup;
+        })
+        state.tasks[oldIndex].owner = action.payload.overGroup;
+      }
     },
     createGroup(state, action: PayloadAction<{
       name: string;
@@ -162,12 +167,15 @@ export const boardSlice = createSlice({
     createTask(state, action: PayloadAction<{
       name: string;
       owner: string;
+      completed: boolean;
+      subtaskOf?: string;
     }>) {
       const newTask: TaskInterface = {
         id: createId('task'),
         name: action.payload.name,
         owner: action.payload.owner,
-        completed: false,
+        completed: action.payload.completed,
+        subtaskOf: action.payload.subtaskOf || undefined,
       }
       state.tasks.push(newTask);
     },
@@ -180,6 +188,13 @@ export const boardSlice = createSlice({
     },
     deleteTask(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter(task => task.id !== action.payload);
+    },
+    toggleTaskComplete(state, action: PayloadAction<string>) {
+      const taskIndex = state.tasks.findIndex(task => task.id === action.payload);
+      if (taskIndex !== -1) {
+        const taskStatus = state.tasks[taskIndex].completed;
+        state.tasks[taskIndex].completed = !taskStatus;
+      }
     },
     setEditing(state, action: PayloadAction<boolean>) {
       state.isEdited = action.payload;
@@ -204,6 +219,7 @@ export const {
   createTask,
   editTaskName,
   deleteTask,
+  toggleTaskComplete,
   setEditing,
   setCreatingNewWorkspace,
   selectWorkspace,

@@ -20,6 +20,7 @@
   &__name {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding-left: 8px;
     font-size: 13px;
     font-weight: 600;
@@ -30,9 +31,18 @@
     overflow-wrap: anywhere;
     padding-bottom: 8px;
 
+    .tasks-completion-count {
+      opacity: 0.5;
+      font-weight: 400;
+    }
+
     &:hover {
       .task-group__buttons {
         display: flex;
+      }
+
+      .tasks-completion-count {
+        display: none;
       }
     }
   }
@@ -46,7 +56,10 @@
   &__buttons {
     display: none;
     align-items: center;
-    padding: 0 16px 0 8px;
     margin-left: auto;
+  }
+
+  .tasks-completion-count {
+    justify-self: flex-end;
   }
 }

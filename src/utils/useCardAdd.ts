@@ -10,13 +10,17 @@ import {
 import type { RootState } from '../store/store';
 
 interface UseCardEditInterface {
-  type: 'tasks'|'groups'|'workspaces',
-  id?: string
+  type: 'tasks'|'groups'|'workspaces';
+  id?: string;
+  data?: {
+    subtaskOf?: string;
+  }
 }
 
-export const useCardAdd = ({ type, id }: UseCardEditInterface) => {
+export const useCardAdd = ({ type, id, data }: UseCardEditInterface) => {
   const [isEditing, setIsEditing] = useState(false);
   const [recordName, setRecordName] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
   const dispatch = useDispatch();
   const isBoardEdited = useSelector((state: RootState) => state.board.isEdited);
 
@@ -46,6 +50,8 @@ export const useCardAdd = ({ type, id }: UseCardEditInterface) => {
         createTask({
           name: recordName,
           owner: id,
+          completed: isComplete,
+          subtaskOf: data?.subtaskOf,
         })
       )
     } else if (type === 'groups' && id) {
@@ -65,9 +71,14 @@ export const useCardAdd = ({ type, id }: UseCardEditInterface) => {
     handleCancel();
   }
 
+  const toggleComplete = () => {
+    setIsComplete(prevState => !prevState);
+  }
+
   return {
     isEditing,
     recordName,
+    isComplete,
     isBoardEdited,
     setIsEditing,
     setRecordName,
@@ -75,5 +86,6 @@ export const useCardAdd = ({ type, id }: UseCardEditInterface) => {
     handleRecordNameChange,
     handleCancel,
     handleCreateRecord,
+    toggleComplete,
   }
 }
