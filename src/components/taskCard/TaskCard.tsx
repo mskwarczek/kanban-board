@@ -42,10 +42,14 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     setIsEditing(true);
   }
 
+  const handleCancel = () => {
+    setIsEditing(false);
+    setTaskName(task.name);
+  }
+
   const handleEditTask = () => {
     if (taskName.length === 0) {
-      setIsEditing(false);
-      setTaskName(task.name);
+      handleCancel();
       return null;
     }
     dispatch(
@@ -65,7 +69,11 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     <CardEdit
       value={taskName}
       handleNameChange={handleTaskNameChange}
-      handleEditEnd={handleEditTask}
+      handleEditEnd={handleCancel}
+      handleEditCancel={handleCancel}
+      withButtons={true}
+      buttonText='Save changes'
+      buttonAction={handleEditTask}
     />
   );
 

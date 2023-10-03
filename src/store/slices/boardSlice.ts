@@ -23,29 +23,23 @@ const testState: BoardInterface | Record<string, never> = {
   workspaces: [{
     id: 'workspace-1',
     name: 'Test workspace 1',
-    position: Infinity,
   }, {
     id: 'workspace-2',
     name: 'Test workspace 2',
-    position: Infinity,
   }, {
     id: 'workspace-3',
     name: 'Test workspace 3',
-    position: Infinity,
   }, {
     id: 'workspace-4',
     name: 'Test workspace 4',
-    position: Infinity,
   }],
   groups: [{
     id: 'group-00',
     name: 'Test group normal length',
-    position: Infinity,
     owner: 'workspace-1',
   }, {
     id: 'group-01',
     name: 'Test group 1',
-    position: Infinity,
     owner: 'workspace-1',
   }],
   tasks: [{
@@ -100,7 +94,6 @@ export const boardSlice = createSlice({
       const newWorkspace: WorkspaceInterface = {
         id: workspaceId,
         name: action.payload.name,
-        position: Infinity,
       }
       state.workspaces.push(newWorkspace);
       state.selectedWorkspace = workspaceId;
@@ -111,6 +104,10 @@ export const boardSlice = createSlice({
     }>) {
       const workspaceIndex = state.workspaces.findIndex(workspace => workspace.id === action.payload.id);
       if (workspaceIndex !== -1) state.workspaces[workspaceIndex].name = action.payload.name;
+    },
+    deleteWorkspace(state, action: PayloadAction<string>) {
+      state.workspaces = state.workspaces.filter(workspace => workspace.id !== action.payload);
+      state.selectedWorkspace = '';
     },
     editWorkspacePosition(state, action: PayloadAction<{
       activeId: string;
@@ -141,10 +138,6 @@ export const boardSlice = createSlice({
       const oldIndex = state.tasks.findIndex(task => task.id === action.payload.activeId);
       if (oldIndex !== -1) state.tasks[oldIndex].owner = action.payload.overGroup;
     },
-    deleteWorkspace(state, action: PayloadAction<string>) {
-      state.workspaces = state.workspaces.filter(workspace => workspace.id !== action.payload);
-      state.selectedWorkspace = '';
-    },
     createGroup(state, action: PayloadAction<{
       name: string;
       owner: string;
@@ -153,7 +146,6 @@ export const boardSlice = createSlice({
         id: createId('group'),
         name: action.payload.name,
         owner: action.payload.owner,
-        position: Infinity,
       }
       state.groups.push(newGroup);
     },

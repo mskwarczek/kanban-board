@@ -69,10 +69,14 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
     setIsEditing(true);
   }
 
+  const handleCancel = () => {
+    setIsEditing(false);
+    setGroupName(group.name);
+  }
+
   const handleEditGroup = () => {
     if (groupName.length === 0) {
-      setIsEditing(false);
-      setGroupName(group.name);
+      handleCancel();
       return null;
     }
     dispatch(
@@ -105,7 +109,11 @@ export const TaskGroup = ({ group }: TaskGroupProps) => {
           <CardEdit
             value={groupName}
             handleNameChange={handleGroupNameChange}
-            handleEditEnd={handleEditGroup}
+            handleEditEnd={handleCancel}
+            handleEditCancel={handleCancel}
+            withButtons={true}
+            buttonText='Save changes'
+            buttonAction={handleEditGroup}
           />
         ) : (
           <div className='task-group__name'>

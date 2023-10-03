@@ -62,10 +62,14 @@ export const WorkspaceCard = ({ workspace, isActive }: WorkspaceCardProps) => {
     setIsEditing(true);
   }
 
+  const handleCancel = () => {
+    setIsEditing(false);
+    setWorkspaceName(workspace.name);
+  }
+
   const handleEditWorkspace = () => {
     if (workspaceName.length === 0) {
-      setIsEditing(false);
-      setWorkspaceName(workspace.name);
+      handleCancel();
       return null;
     }
     dispatch(
@@ -85,9 +89,13 @@ export const WorkspaceCard = ({ workspace, isActive }: WorkspaceCardProps) => {
     <CardEdit
       value={workspaceName}
       handleNameChange={handleWorkspaceNameChange}
-      handleEditEnd={handleEditWorkspace}
+      handleEditEnd={handleCancel}
       icon={<WorkspaceIcon name={workspaceName} classExtension='edit-workspace' />}
       classExtension='edit-workspace'
+      handleEditCancel={handleCancel}
+      withButtons={true}
+      buttonText='Save changes'
+      buttonAction={handleEditWorkspace}
     />
   )
 

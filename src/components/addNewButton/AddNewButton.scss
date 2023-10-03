@@ -62,4 +62,27 @@
       }
     }
   }
+
+  &.card-edit-button {
+    width: initial;
+    cursor: not-allowed;
+    background:
+      linear-gradient(0deg, #D0CDD8, #D0CDD8),
+      linear-gradient(0deg, #B8B3C5, #B8B3C5);
+    border: 1px solid #B8B3C5;
+    padding: 8px 12px 8px 12px;
+
+    & span {
+      color: #594F78;
+    }
+
+    &--ready {
+      background: variables.$color-background-action;
+      border: 1px solid variables.$color-background-action;
+      cursor: pointer;
+      & span {
+        color: variables.$color-text-action-alt;
+      }
+    }
+  }
 }

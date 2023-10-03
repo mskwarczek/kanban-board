@@ -1,5 +1,4 @@
 import './AddNewButton.scss';
-import { Plus } from '../../assets/icons';
 
 interface AddNewButtonProps {
   text: string;
@@ -23,7 +22,7 @@ export const AddNewButton = ({
       disabled={disabled}
     >
       <span>
-        {icon ? icon : <Plus />}
+        {icon ? icon : null}
       </span>
       <span>{text}</span>
     </button>

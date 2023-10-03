@@ -9,14 +9,12 @@ export interface TaskInterface {
 export interface TaskGroupInterface {
   id: string;
   name: string;
-  position: number;
   owner: string;
 }
 
 export interface WorkspaceInterface {
   id: string;
   name: string;
-  position: number;
 }
 
 export interface BoardInterface {
