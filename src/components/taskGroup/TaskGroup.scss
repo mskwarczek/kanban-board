@@ -7,7 +7,7 @@
 
 .task-group {
   width: 100%;
-  max-width: variables.$card-max-width;
+  min-width: variables.$card-max-width;
   padding: 16px 8px 8px 8px;
   align-self: flex-start;
   display: flex;
@@ -29,6 +29,7 @@
     text-align: left;
     color: variables.$color-text;
     overflow-wrap: anywhere;
+    cursor: default;
     padding-bottom: 8px;
 
     .tasks-completion-count {

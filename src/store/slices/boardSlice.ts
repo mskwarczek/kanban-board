@@ -10,82 +10,76 @@ import type {
   TaskInterface
 } from '../types';
 
-// const initialState: BoardInterface | Record<string, never> = {
-//   workspaces: [],
-//   groups: [],
-//   tasks: [],
-//   isEdited: false,
-//   isCreatingNewWorkspace: false,
-//   selectedWorkspace: undefined,
-// };
-
-const testState: BoardInterface | Record<string, never> = {
+const initialState: BoardInterface | Record<string, never> = {
   workspaces: [{
-    id: 'workspace-1',
-    name: 'Test workspace 1',
-  }, {
-    id: 'workspace-2',
-    name: 'Test workspace 2',
-  }, {
-    id: 'workspace-3',
-    name: 'Test workspace 3',
-  }, {
-    id: 'workspace-4',
-    name: 'Test workspace 4',
+    id: 'workspace-100',
+    name: 'Acme Corp Workspace',
   }],
   groups: [{
-    id: 'group-00',
-    name: 'Test group normal length',
-    owner: 'workspace-1',
+    id: 'group-100',
+    name: 'Working on',
+    owner: 'workspace-100',
   }, {
-    id: 'group-01',
-    name: 'Test group 1',
-    owner: 'workspace-1',
+    id: 'group-200',
+    name: 'Review',
+    owner: 'workspace-100',
   }],
   tasks: [{
-    id: 'task-000',
-    name: 'Test task normal length',
-    owner: 'group-00',
+    id: 'task-100',
+    name: 'Create a video for Acme',
+    owner: 'group-100',
+    completed: true,
+  }, {
+    id: 'task-200',
+    name: 'Review Acme PDF',
+    owner: 'group-100',
     completed: false,
   }, {
-    id: 'task-001',
-    name: 'This is a task with very long name using typical english words intended to to see if it is displayed correctly',
-    owner: 'group-00',
+    id: 'task-300',
+    name: 'Social Media posts for Acme',
+    owner: 'group-200',
     completed: false,
   }, {
-    id: 'task-002',
-    name: 'Thhheeeeesssseeeee aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeeeeeeeeeeee lllllllllllllllllllllllllloooooooooooooooonnnnnnnngggggggg wwwwwwwwwwwwwwwwwwooooooooooorrrrrrrdddddddddsssssssss',
-    owner: 'group-00',
+    id: 'task-400',
+    name: 'Facebook Campaign',
+    owner: 'group-200',
+    completed: true,
+  }, {
+    id: 'task-500',
+    name: 'TikTok Profile Setup',
+    owner: 'group-200',
     completed: false,
   }, {
-    id: createId('task'),
-    name: 'Test task 1',
-    owner: 'group-01',
+    id: 'task-600',
+    name: 'Review Acme PDF',
+    owner: 'group-200',
+    completed: false,
+    subtaskOf: 'task-500',
+  }, {
+    id: 'task-700',
+    name: 'Create a video for Acme',
+    owner: 'group-200',
+    completed: false,
+    subtaskOf: 'task-500',
+  }, {
+    id: 'task-800',
+    name: 'Marketing list',
+    owner: 'group-200',
     completed: false,
   }, {
-    id: createId('task'),
-    name: 'Test task 2',
-    owner: 'group-01',
-    completed: false,
-  }, {
-    id: createId('task'),
-    name: 'Test task 3',
-    owner: 'group-01',
-    completed: false,
-  }, {
-    id: createId('task'),
-    name: 'Test task 4',
-    owner: 'group-01',
+    id: 'task-900',
+    name: 'Company video',
+    owner: 'group-200',
     completed: false,
   }],
   isEdited: false,
   isCreatingNewWorkspace: false,
-  selectedWorkspace: undefined,
+  selectedWorkspace: 'workspace-100',
 };
 
 export const boardSlice = createSlice({
   name: 'board',
-  initialState: testState,
+  initialState,
   reducers: {
     createWorkspace(state, action: PayloadAction<{
       name: string;
@@ -96,6 +90,15 @@ export const boardSlice = createSlice({
         name: action.payload.name,
       }
       state.workspaces.push(newWorkspace);
+      state.groups.push({
+        id: createId('group'),
+        name: 'Working on',
+        owner: workspaceId,
+      }, {
+        id: createId('group'),
+        name: 'Review',
+        owner: workspaceId,
+      });
       state.selectedWorkspace = workspaceId;
     },
     editWorkspaceName(state, action: PayloadAction<{
@@ -107,6 +110,9 @@ export const boardSlice = createSlice({
     },
     deleteWorkspace(state, action: PayloadAction<string>) {
       state.workspaces = state.workspaces.filter(workspace => workspace.id !== action.payload);
+      const groups = state.groups.filter(group => group.owner === action.payload).map(group => group.id);
+      state.tasks = state.tasks.filter(task => !groups.includes(task.owner));
+      state.groups = state.groups.filter(group => group.owner !== action.payload);
       state.selectedWorkspace = '';
     },
     editWorkspacePosition(state, action: PayloadAction<{
@@ -163,6 +169,7 @@ export const boardSlice = createSlice({
     },
     deleteGroup(state, action: PayloadAction<string>) {
       state.groups = state.groups.filter(group => group.id !== action.payload);
+      state.tasks = state.tasks.filter(task => task.owner !== action.payload);
     },
     createTask(state, action: PayloadAction<{
       name: string;

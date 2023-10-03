@@ -3,6 +3,6 @@
 .add-group {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: variables.$card-max-width;
+  width: variables.$card-max-width;
+  min-width: variables.$card-max-width;
 }

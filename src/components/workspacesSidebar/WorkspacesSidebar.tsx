@@ -8,6 +8,7 @@ import { UserProfile } from '../userProfile';
 import { WorkspaceSettings } from '../workspaceSettings';
 import { WorkspaceCard } from '../workspaceCard';
 import { NewWorkspace } from '../newWorkspace';
+import { SideMenu } from '../sideMenu';
 import type { WorkspaceInterface } from '../../store/types';
 
 interface WorkspacesSidebarProps {
@@ -41,7 +42,9 @@ export const WorkspacesSidebar = ({
         </SortableContext>
         <NewWorkspace />
       </div>
-      <div className='workspaces-main'></div>
+      <div className='workspaces-main'>
+          <SideMenu />
+      </div>
       <div className='workspaces-footer'>
         <UserProfile />
         <WorkspaceSettings/>

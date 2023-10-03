@@ -36,6 +36,7 @@
     font-weight: 400;
     line-height: 18px;
     letter-spacing: 0em;
+    caret-color: variables.$color-text-action;
   }
 
   &.new-group {
@@ -47,5 +48,9 @@
   &.edit-workspace {
     background: variables.$color-background;
     box-shadow: none;
+
+    .card-edit__input {
+      font-weight: 600;
+    }
   }
 }

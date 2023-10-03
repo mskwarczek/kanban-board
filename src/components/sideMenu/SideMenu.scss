@@ -1,0 +1,31 @@
+@use 'src/design/variables';
+
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 32px 0 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0em;
+  text-align: left;
+
+  &__item {
+    display: flex;
+    align-items: center;;
+    gap: 16px;
+
+    :first-child {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &--active {
+      color: variables.$color-text-action;
+    }
+  }
+}
